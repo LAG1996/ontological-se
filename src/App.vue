@@ -1,6 +1,22 @@
 <template>
   <div id="page">
-    <div id="editor" contenteditable="true"></div>
+    <div id="editor" v-on:click="onClickShell()">
+      <table>
+        <tbody>
+          <tr v-for="(line, index) in lines">
+            <td class="line-number">
+              {{index + 1}}
+            </td>
+            <td>
+              <TextEditorLine
+                v-bind:lineNo="1"
+                v-on:enter="onClickEnter()"
+              ></TextEditorLine>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="label">
       <span>^</span>
@@ -13,8 +29,23 @@
 </template>
 
 <script>
+import TextEditorLine from './components/TextEditorLine.vue';
 export default {
   name: 'app',
+  components: { TextEditorLine },
+  data: function() {
+    return {
+      lines: [''],
+    };
+  },
+  methods: {
+    onClickShell: function() {
+      return false;
+    },
+    onClickEnter: function() {
+      this.lines.push('');
+    },
+  },
 }
 </script>
 
@@ -29,7 +60,6 @@ body {
 #page {
   margin: 15px 27px;
   padding: 10px;
-  height: 100vh;
   min-height: 100vh;
   border: 2px solid #d5d5e4;
   border-radius: 5px;
@@ -39,12 +69,13 @@ body {
   min-height: 100%;
 }
 
-#page > #editor:focus{
-  outline: none;
+table {
+  width: 100%;
 }
 
-#page > #editor > div {
-  margin: 15px 0;
+table .line-number {
+  width: 3em;
+  vertical-align: top;
 }
 
 .label {
